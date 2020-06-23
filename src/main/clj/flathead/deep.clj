@@ -20,3 +20,20 @@
   (-> m vals
       (map #(if (map? %) (values %) %))
       flatten))
+
+(defn evolve
+  "Ramda evolve for clojure."
+  [transformations object]
+  (if (map? object)
+    (persistent!
+      (reduce
+        (fn [result [key transformation]]
+          (if-let [original-value (key result)]
+            (assoc! result key
+                    (if (map? transformation)
+                      (evolve transformation original-value)
+                      (transformation original-value)))
+            result))
+        (transient object)
+        transformations))
+    object))
