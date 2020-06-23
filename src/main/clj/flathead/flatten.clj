@@ -49,14 +49,27 @@
      {} object)))
 
 (defn sequence->map
-  "When sequences are part of the nested structure they can be first converted to maps
-  and then to flat objects using function tree->flat."
-  [object]
-  (let [convert
-        (fn [[key value :as entry]]
-          (if (seqable? value)
-            [key (plain/sequence->map value)]
-            entry))]
+  "When other sequences are part of the nested structure they can be first converted to maps
+  and then to flat objects using function tree->flat.
+
+  Some other libraries e.g. ramda treat all sequences automatically as maps.
+  Whereas in clojure.core maps are sequences, but other sequences (e.g. lists and vectors) are not maps.
+
+  This function can convert all seqable objects to a map where key is values index in the sequence.
+
+  A predicate function structural-sequence? can be used to define which sequences are
+  part of the structure.
+
+  For example strings are seqable but they typically are not part of the nested structure. "
+  ([object] (sequence->map #(-> % string? not) object))
+  ([structural-sequence? object]
     (walk/postwalk
-      #(if (map-entry? %) (convert %) %)
+      (fn [value]
+        (if ((every-pred seqable?
+                         (complement map-entry?)
+                         (complement map?)
+                         structural-sequence?)
+             value)
+          (plain/map-keys #(-> % str keyword) (plain/sequence->map value))
+          value))
       object)))
