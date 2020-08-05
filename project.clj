@@ -1,4 +1,4 @@
-(defproject flathead "0.0.2"
+(defproject flathead "0.0.3"
   :description "Utility library for nested objects."
   :url "https://github.com/hkorpi/flathead"
   :license {:name "Apache License"
