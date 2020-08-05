@@ -8,13 +8,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 ### Added
-- _CHANGELOG.md_ created.
-### Changed
-- Something has been changed.
-### Fixed
-- Something has been fixed.
-### Removed
-- Something has been removed.
-
+- deep/map-values: map recursively all values of a nested map
 
 [Unreleased]: https://github.com/hkorpi/flathead/compare/0.0.0...HEAD
