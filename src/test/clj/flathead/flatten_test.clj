@@ -23,7 +23,7 @@
   (test-conversions {:a 1 :b {:a 1 :b {:a 1 :b 2}}} {:a 1 :b-a 1 :b-b-a 1 :b-b-b 2}))
 
 (t/deftest sequence->map-empty
-  (t/is (= (flat/sequence->map nil) {}))
+  (t/is (= (flat/sequence->map nil) nil))
   (t/is (= (flat/sequence->map []) {}))
   (t/is (= (flat/sequence->map '()) {})))
 
@@ -33,7 +33,6 @@
 
 (t/deftest sequence->map-nested
   (t/is (= (flat/sequence->map [[1]]) {:0 {:0 1}}))
-  (t/is (= (flat/sequence->map [1 [1]]) {:0 1 :1 {:0 1}})))
-
-
-
+  (t/is (= (flat/sequence->map [1 [1]]) {:0 1 :1 {:0 1}}))
+  (t/is (= (flat/sequence->map [1 [1] nil {:a nil :b [2]}])
+           {:0 1 :1 {:0 1} :2 nil :3 {:a nil :b {:0 2}}})))
