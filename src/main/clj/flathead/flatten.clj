@@ -55,7 +55,7 @@
   Some other libraries e.g. ramda treat all sequences automatically as maps.
   Whereas in clojure.core maps are sequences, but other sequences (e.g. lists and vectors) are not maps.
 
-  This function can convert all seqable objects to a map where key is values index in the sequence.
+  This function can convert all seqable objects to a map where key is values index in the sequence. Nils will be kept as nils.
 
   A predicate function structural-sequence? can be used to define which sequences are
   part of the structure.
@@ -68,6 +68,7 @@
         (if ((every-pred seqable?
                          (complement map-entry?)
                          (complement map?)
+                         (complement nil?)
                          structural-sequence?)
              value)
           (plain/map-keys #(-> % str keyword) (plain/sequence->map value))
