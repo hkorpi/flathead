@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 
 ## [Unreleased]
+
+## [0.0.4] — 2021-06-28
 ### Changed
 - flatten/sequence->map: Nils will be kept as nils.
 
@@ -15,4 +17,5 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - deep/map-values: map recursively all values of a nested map
 
 [0.0.3]: https://github.com/hkorpi/flathead/compare/0.0.0...0.0.3
-[Unreleased]: https://github.com/hkorpi/flathead/compare/0.0.3...HEAD
+[0.0.4]: https://github.com/hkorpi/flathead/compare/0.0.3...0.0.4
+[Unreleased]: https://github.com/hkorpi/flathead/compare/0.0.4...HEAD

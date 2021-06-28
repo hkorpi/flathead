@@ -13,7 +13,7 @@ This library is divided to three parts:
 * **plain**: utility functions for plain objects
 
 ```clj
-[flathead "0.0.3"]
+[flathead "0.0.4"]
 ```
 
 ## Usage
