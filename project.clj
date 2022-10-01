@@ -1,11 +1,11 @@
-(defproject flathead "0.0.4"
+(defproject flathead "0.0.5"
   :description "Utility library for nested objects."
   :url "https://github.com/hkorpi/flathead"
   :license {:name "Apache License"
             :url  "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies []
-  :source-paths ["src/main/clj"]
-  :test-paths ["src/test/clj"]
+  :source-paths ["src/main/cljc"]
+  :test-paths ["src/test/cljc" "src/test/clj"]
   :plugins [[lein-cloverage "1.0.13"]
             [lein-shell "0.5.0"]
             [lein-ancient "0.6.15"]

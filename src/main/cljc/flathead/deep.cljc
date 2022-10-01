@@ -28,11 +28,11 @@
   A value? predicate can be used to mark some specific map as a value."
   ([fn nested-map] (map-values (constantly false) fn nested-map))
   ([value? fn nested-map]
-    (plain/map-values
-      (logic/if* (every-pred map? (complement value?))
-                 (partial map-values value? fn)
-                 fn)
-      nested-map)))
+   (plain/map-values
+     (logic/if* (every-pred map? (complement value?))
+                (partial map-values value? fn)
+                fn)
+     nested-map)))
 
 (defn evolve
   "Ramda evolve for clojure."

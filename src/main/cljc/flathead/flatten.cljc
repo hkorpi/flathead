@@ -2,7 +2,7 @@
   (:require [clojure.string :as str]
             [clojure.walk :as walk]
             [flathead.plain :as plain])
-  (:import (java.util.regex Pattern)))
+  #?(:clj (:import (java.util.regex Pattern))))
 
 (defn key-path
   "Split key to a key path. Key path item separator is separator regular expression."
@@ -20,12 +20,12 @@
   are associated to a new nested or existing map using a specific key path, which is generated from
   the current key of the value.
 
-  A key path is a sequence of keys and it is generated from splitting the current key
+  A key path is a sequence of keys, and it is generated from splitting the current key
   using a given separator. Separator is a regular expression.
 
   e.g. {:a_x 1, :a_y 2 :b 3} -> {a: {:x 1 :y 2} :b 3}"
 
-  [^Pattern separator row]
+  [#?(:clj ^Pattern separator :default separator) row]
   (reduce (fn [obj [key value]] (assoc-in obj (key-path key separator) value))
           {} row))
 
@@ -38,8 +38,8 @@
   If nested structure contains also other sequences
   they can be first converted to map using function sequence->map"
 
-  ([^String separator object] (tree->flat nil separator object))
-  ([^String prefix ^String separator object]
+  ([separator object] (tree->flat nil separator object))
+  ([prefix separator object]
    (reduce
      (fn [row [key value]]
        (let [flat-key (add-prefix prefix separator key)]
@@ -60,17 +60,17 @@
   A predicate function structural-sequence? can be used to define which sequences are
   part of the structure.
 
-  For example strings are seqable but they typically are not part of the nested structure. "
+  For example strings are seqable, but they typically are not part of the nested structure. "
   ([object] (sequence->map #(-> % string? not) object))
   ([structural-sequence? object]
-    (walk/postwalk
-      (fn [value]
-        (if ((every-pred seqable?
-                         (complement map-entry?)
-                         (complement map?)
-                         (complement nil?)
-                         structural-sequence?)
-             value)
-          (plain/map-keys #(-> % str keyword) (plain/sequence->map value))
-          value))
-      object)))
+   (walk/postwalk
+     (fn [value]
+       (if ((every-pred seqable?
+                        (complement map-entry?)
+                        (complement map?)
+                        (complement nil?)
+                        structural-sequence?)
+            value)
+         (plain/map-keys #(-> % str keyword) (plain/sequence->map value))
+         value))
+     object)))
