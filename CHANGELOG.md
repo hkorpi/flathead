@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 
 ## [Unreleased]
+
+## [0.0.6] — 2023-02-22
 ### Added
 - deep/apply-spec: Ramda apply spec for clojure.
 
@@ -25,4 +27,5 @@ Convert to common clojure
 [0.0.3]: https://github.com/hkorpi/flathead/compare/0.0.0...0.0.3
 [0.0.4]: https://github.com/hkorpi/flathead/compare/0.0.3...0.0.4
 [0.0.5]: https://github.com/hkorpi/flathead/compare/0.0.4...0.0.5
-[Unreleased]: https://github.com/hkorpi/flathead/compare/0.0.5...HEAD
+[0.0.6]: https://github.com/hkorpi/flathead/compare/0.0.5...0.0.6
+[Unreleased]: https://github.com/hkorpi/flathead/compare/0.0.6...HEAD
