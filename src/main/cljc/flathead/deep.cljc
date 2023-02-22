@@ -50,3 +50,18 @@
         (transient object)
         transformations))
     object))
+
+(defn apply-spec
+  "Ramda apply spec for clojure.
+  Creates a function, which produces an object of the same structure as the specification object.
+  Object values are produced by applying the corresponding function in specification object to the arguments.
+  All values in specification object must be functions. Specification object can be nested."
+  ([specification] (apply-spec specification 0))
+  ([specification argument-count]
+   (case argument-count
+     1 (fn [param] (map-values #(% param) specification))
+     2 (fn [p1 p2] (map-values #(% p1 p2) specification))
+     3 (fn [p1 p2 p3] (map-values #(% p1 p2 p3) specification))
+     4 (fn [p1 p2 p3 p4] (map-values #(% p1 p2 p3 p4) specification))
+     5 (fn [p1 p2 p3 p4 p5] (map-values #(% p1 p2 p3 p4 p5) specification))
+     (fn [& params] (map-values #(apply % params) specification)))))

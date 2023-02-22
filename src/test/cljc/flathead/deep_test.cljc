@@ -41,3 +41,15 @@
   (t/is (= (deep/evolve {:a {:b str}} {:a {:b 1}}) {:a {:b "1"}}))
   (t/is (= (deep/evolve {:a {:b str}} {:a {:b 1 :c 2}}) {:a {:b "1" :c 2}})))
 
+(t/deftest apply-spec-flat-objects
+  (t/is (= ((deep/apply-spec nil) 1) {}))
+  (t/is (= ((deep/apply-spec {}) 1) {}))
+  (t/is (= ((deep/apply-spec {:a identity}) 1) {:a 1}))
+  (t/is (= ((deep/apply-spec {:a identity} 1) 1) {:a 1}))
+  (t/is (= ((deep/apply-spec {:a inc}) 1) {:a 2}))
+  (t/is (= ((deep/apply-spec {:a +} 2) 1 1) {:a 2})))
+
+(t/deftest apply-spec-nested-objects
+  (t/is (= ((deep/apply-spec {:a {:b identity}}) 1) {:a {:b 1}}))
+  (t/is (= ((deep/apply-spec {:a {:b inc}}) 1) {:a {:b 2}})))
+
