@@ -22,7 +22,7 @@
   "Find recursively all values of a nested associative structure using a depth-first search (DFS).
   Returns a lazy sequence of values. Supports any seqable objects (see seqable?).
   For maps the values are map values (vals) and for other seqable objects the sequence itself.
-  A branch? predicate can be used to define if object is part of the structure or a value. Values are leafs in DFS.
+  A branch? predicate can be used to define if object is part of the nested structure or a value. Values are leafs in DFS.
   You can only mark seqable objects as branches. The default version treat all sequential objects and maps as branches."
   ([nested-map] (values (some-fn sequential? map?) nested-map))
   ([branch? nested-map]
@@ -31,6 +31,7 @@
 (defn map-values
   "Map recursively all values of a nested associative structure. Supports any seqable objects (see seqable?).
   For maps the values are mapped using plain/map-values and for other seqable objects using map function.
+  Note that map function will change seqable to a lazy sequence.
   A branch? predicate can be used to mark objects as part of structure and not a value.
   You can only mark seqable objects as branches. The default version treat all sequential objects and maps as branches."
   ([f nested-map] (map-values (some-fn sequential? map?) f nested-map))

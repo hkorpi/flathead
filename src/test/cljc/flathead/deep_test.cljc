@@ -30,7 +30,9 @@
   (t/is (= (deep/map-values identity nil) {}))
   (t/is (= (deep/map-values identity {}) {}))
   (t/is (= (deep/map-values identity {:a 1}) {:a 1}))
-  (t/is (= (deep/map-values identity {:a 1 :b 1}) {:a 1 :b 1})))
+  (t/is (= (deep/map-values identity {:a 1 :b 1}) {:a 1 :b 1}))
+  (t/is (= (deep/map-values identity {:a 1 :b [2 2]}) {:a 1 :b '(2 2)}))
+  (t/is (= (deep/map-values map? identity {:a 1 :b [2 2]}) {:a 1 :b [2 2]})))
 
 (t/deftest map-values-flat-objects-inc
   (t/is (= (deep/map-values inc nil) {}))
@@ -41,7 +43,9 @@
 (t/deftest map-values-nested-objects-inc
   (t/is (= (deep/map-values inc {:a {:b 1}}) {:a {:b 2}}))
   (t/is (= (deep/map-values inc {:a {:b 1} :b 1}) {:a {:b 2} :b 2}))
-  (t/is (= (deep/map-values inc {:a {:b 1 :c 1}}) {:a {:b 2 :c 2}})))
+  (t/is (= (deep/map-values inc {:a {:b 1 :c 1}}) {:a {:b 2 :c 2}}))
+  (t/is (= (deep/map-values inc {:a {:b 1 :c [2 2]}}) {:a {:b 2 :c [3 3]}}))
+  (t/is (= (deep/map-values inc {:a {:b 1 :c [{:b 2}]}}) {:a {:b 2 :c [{:b 3}]}})))
 
 (t/deftest evolve-flat-objects
   (t/is (= (deep/evolve {} {}) {}))
