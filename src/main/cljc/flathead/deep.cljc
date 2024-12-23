@@ -18,21 +18,28 @@
   [& vs]
   (apply deep-merge-with last vs))
 
-(defn values [m]
-  (-> m vals
-      (map #(if (map? %) (values %) %))
-      flatten))
+(defn values
+  "Find recursively all values of a nested associative structure using a depth-first search (DFS).
+  Returns a lazy sequence of values. Supports any seqable objects (see seqable?).
+  For maps the values are map values (vals) and for other seqable objects the sequence itself.
+  A branch? predicate can be used to define if object is part of the structure or a value. Values are leafs in DFS.
+  You can only mark seqable objects as branches. The default version treat all sequential objects and maps as branches."
+  ([nested-map] (values (some-fn sequential? map?) nested-map))
+  ([branch? nested-map]
+   (remove branch? (tree-seq branch? (logic/when* map? vals) nested-map))))
 
 (defn map-values
-  "Map recursively all values of a nested map.
-  A value? predicate can be used to mark some specific map as a value."
-  ([fn nested-map] (map-values (constantly false) fn nested-map))
-  ([value? fn nested-map]
-   (plain/map-values
-     (logic/if* (every-pred map? (complement value?))
-                (partial map-values value? fn)
-                fn)
-     nested-map)))
+  "Map recursively all values of a nested associative structure. Supports any seqable objects (see seqable?).
+  For maps the values are mapped using plain/map-values and for other seqable objects using map function.
+  A branch? predicate can be used to mark objects as part of structure and not a value.
+  You can only mark seqable objects as branches. The default version treat all sequential objects and maps as branches."
+  ([f nested-map] (map-values (some-fn sequential? map?) f nested-map))
+  ([branch? f nested-map]
+   (let [recursive-f (logic/if* branch? (partial map-values branch? f) f)]
+     (cond
+       (nil? nested-map) {} ;; same as plain/map-values
+       (map? nested-map) (plain/map-values recursive-f nested-map)
+       :else (map recursive-f nested-map)))))
 
 (defn evolve
   "Ramda evolve for clojure."

@@ -11,6 +11,21 @@
 (t/deftest deep-merge-nested-objects
   (t/is (= (deep/deep-merge {:a {:a 1}} {:a {:b 1}}) {:a {:a 1 :b 1}})))
 
+(t/deftest values
+  (t/is (= (deep/values 1) '(1)))
+  (t/is (= (deep/values "asdf") '("asdf")))
+  (t/is (= (deep/values string? "asdf") '(\a \s \d \f)))
+  (t/is (= (deep/values nil) '(nil)))
+  (t/is (= (deep/values nil? nil) '()))
+  (t/is (= (deep/values {}) '()))
+  (t/is (= (deep/values {:a nil}) '(nil)))
+  (t/is (= (deep/values {:a 1}) '(1)))
+  (t/is (= (deep/values {:a 1 :b 1}) '(1 1)))
+  (t/is (= (deep/values {:a 1 :b {:c 2 :d 2}}) '(1 2 2)))
+  (t/is (= (deep/values {:a 1 :b [{:c 2 :d 2}]}) '(1 2 2)))
+  (t/is (= (deep/values {:a 1 :b [{:c 2 :d [3 3 3]}]}) '(1 2 3 3 3)))
+  (t/is (= (deep/values map? {:a 1 :b [{:c 2 :d 2}]}) '(1 [{:c 2 :d 2}]))))
+
 (t/deftest map-values-flat-objects-identity
   (t/is (= (deep/map-values identity nil) {}))
   (t/is (= (deep/map-values identity {}) {}))
