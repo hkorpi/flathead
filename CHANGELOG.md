@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 
 ## [Unreleased]
+### Changed
+- deep/map-values supports any seqable objects
+- deep/map-values values? predicate changed to branch? and there is more flexibility 
+  to filter which seqable objects are supported
+### Fixed
+- deep/values
 
 ## [0.0.6] — 2023-02-22
 ### Added
