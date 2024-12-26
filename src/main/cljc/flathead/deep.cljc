@@ -1,5 +1,6 @@
 (ns flathead.deep
-  (:require [flathead.plain :as plain]
+  (:require [clojure.walk :as walk]
+            [flathead.plain :as plain]
             [flathead.logic :as logic]))
 
 (defn deep-merge-with
@@ -42,6 +43,32 @@
        (map? nested-map) (plain/map-values recursive-f nested-map)
        :else (map recursive-f nested-map)))))
 
+(defn tree->flat
+  "Transforms a nested associative structure (map) to a flat one.
+  Supports any seqable objects (see seqable?). Other sequences are transformed to maps using plain/sequence->map.
+  This is an inverse of the plain/flat->tree function.
+
+  The nested structure is not allowed to contain cycles it must be a tree.
+
+  Arguments:
+  - A conj-key function defines how child keys are conjoined to the root key.
+  - A branch? predicate can be used to mark objects as part of tree structure and not a value.
+  - A root-key represent a key for the tree object.
+
+  The default version use paths as keys in flat map and treat all sequential objects and maps as branches.
+  The values are same values as in values function i.e. (= (-> tree tree->flat vals set) (-> tree values set)).
+  The flatten namespace contains another variation which is using concatenated keys with separator."
+
+  ([tree] (tree->flat conj (some-fn sequential? map?) [] tree))
+  ([conj-key branch? root-key tree]
+   (reduce
+     (fn [row [key value]]
+       (let [child-key (conj-key root-key key)]
+         (if (branch? value)
+           (merge row (tree->flat conj-key branch? child-key value))
+           (assoc row child-key value))))
+     {} (plain/sequence->map tree))))
+
 (defn evolve
   "Ramda evolve for clojure."
   [transformations object]
@@ -73,3 +100,19 @@
      4 (fn [p1 p2 p3 p4] (map-values #(% p1 p2 p3 p4) specification))
      5 (fn [p1 p2 p3 p4 p5] (map-values #(% p1 p2 p3 p4 p5) specification))
      (fn [& params] (map-values #(apply % params) specification)))))
+
+(defn sequence->map
+  "Convert all seqable objects to a map using plain/sequence->map. Nils will be kept as nils.
+
+  A predicate function convert? can be used to define which seqable objects are converted.
+  For example strings are seqable, but you typically do not want to convert them to maps."
+  ([object] (sequence->map sequential? object))
+  ([convert? object]
+   (walk/postwalk
+     (logic/when* (every-pred seqable?
+                              (complement map-entry?)
+                              (complement map?)
+                              (complement nil?)
+                              convert?)
+                  plain/sequence->map)
+     object)))
