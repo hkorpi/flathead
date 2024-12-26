@@ -9,11 +9,11 @@
    #(if (predicate %) (then-fn %) (else-fn %))))
 
 (defn when*
-  "Higher order ramda style when-function."
+  "Higher order ramda style when-function. This is convenient with walk/postwalk"
   ([predicate then-fn]
    #(if (predicate %) (then-fn %) %)))
 
 (defn unless*
-  "Higher order ramda style unless-function."
+  "Higher order ramda style unless-function. Same as (when (complement predicate) then-fn)"
   ([predicate then-fn]
    #(if-not (predicate %) (then-fn %) %)))
