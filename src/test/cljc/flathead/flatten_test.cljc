@@ -3,8 +3,9 @@
             [flathead.flatten :as flat]))
 
 (defmacro test-conversions [tree flat]
-  `(t/is (= (flat/tree->flat "-" ~tree) ~flat))
-  `(t/is (= (flat/flat->tree #"-" ~flat) ~tree)))
+  `(do
+     (t/is (= (flat/tree->flat "-" ~tree) ~flat))
+     (t/is (= (flat/flat->tree #"-" ~flat) ~tree))))
 
 (t/deftest nils
   (t/is (= (flat/tree->flat "-" nil) {}))
@@ -13,6 +14,7 @@
 (t/deftest nesting
   (test-conversions {} {})
   (test-conversions {:a 1} {:a 1})
+  (test-conversions {:a [1]} {:a [1]})
   (test-conversions {:a {:a 1}} {:a-a 1})
   (test-conversions {:a {:a {:a 1}}} {:a-a-a 1})
   (test-conversions {:a {:a {:a {:a 1}}}} {:a-a-a-a 1}))
@@ -22,17 +24,14 @@
   (test-conversions {:a 1 :b {:a 1 :b 2}} {:a 1 :b-a 1 :b-b 2})
   (test-conversions {:a 1 :b {:a 1 :b {:a 1 :b 2}}} {:a 1 :b-a 1 :b-b-a 1 :b-b-b 2}))
 
-(t/deftest sequence->map-empty
-  (t/is (= (flat/sequence->map nil) nil))
-  (t/is (= (flat/sequence->map []) {}))
-  (t/is (= (flat/sequence->map '()) {})))
+(t/deftest other-key-types
+  (t/is (= (flat/tree->flat nil "-" {0 0}) {0 0}))
+  (t/is (= (flat/tree->flat nil "-" {:a {0 0}}) {:a-0 0})))
 
-(t/deftest sequence->map-1
-  (t/is (= (flat/sequence->map [1]) {:0 1}))
-  (t/is (= (flat/sequence->map '(1)) {:0 1})))
+(t/deftest sequences
+  (t/is (= (flat/tree->flat nil sequential? "-" [0 1 2]) {0 0 1 1 2 2}))
+  (t/is (= (flat/tree->flat nil sequential? "-" [0 1 [0 1 2]]) {0 0 1 1 :2-0 0 :2-1 1 :2-2 2}))
+  (t/is (= (flat/tree->flat nil "-" {:a [0 1 2]}) {:a [0 1 2]}))
+  (t/is (= (flat/tree->flat nil (some-fn map? sequential?) "-" {:a [0 1 2]}) {:a-0 0 :a-1 1 :a-2 2})))
 
-(t/deftest sequence->map-nested
-  (t/is (= (flat/sequence->map [[1]]) {:0 {:0 1}}))
-  (t/is (= (flat/sequence->map [1 [1]]) {:0 1 :1 {:0 1}}))
-  (t/is (= (flat/sequence->map [1 [1] nil {:a nil :b [2]}])
-           {:0 1 :1 {:0 1} :2 nil :3 {:a nil :b {:0 2}}})))
+

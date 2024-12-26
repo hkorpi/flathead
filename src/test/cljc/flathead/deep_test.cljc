@@ -72,3 +72,17 @@
   (t/is (= ((deep/apply-spec {:a {:b identity}}) 1) {:a {:b 1}}))
   (t/is (= ((deep/apply-spec {:a {:b inc}}) 1) {:a {:b 2}})))
 
+(t/deftest sequence->map-empty
+  (t/is (= (deep/sequence->map nil) nil))
+  (t/is (= (deep/sequence->map []) {}))
+  (t/is (= (deep/sequence->map '()) {})))
+
+(t/deftest sequence->map-1
+  (t/is (= (deep/sequence->map [1]) {0 1}))
+  (t/is (= (deep/sequence->map '(1)) {0 1})))
+
+(t/deftest sequence->map-nested
+  (t/is (= (deep/sequence->map [[1]]) {0 {0 1}}))
+  (t/is (= (deep/sequence->map [1 [1]]) {0 1 1 {0 1}}))
+  (t/is (= (deep/sequence->map [1 [1] nil {:a nil :b [2]}])
+           {0 1 1 {0 1} 2 nil 3 {:a nil :b {0 2}}})))
