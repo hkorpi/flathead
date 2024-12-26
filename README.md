@@ -5,12 +5,13 @@
 
 A Clojure library containing utility functions for nested objects. 
 The purpose is to augment existing core functionality.
-This contains conversions to and from flat representation of nested structure.
+This library also contains conversions to and from flat representation of a nested structure.
 
-This library is divided to three parts:
-* **flatten**: conversions from nested objects to/from plain flat objects
+This library is divided to four parts:
+* **flatten**: conversions from nested objects to/from plain flat objects.
 * **deep**: utility functions for nested objects
 * **plain**: utility functions for plain objects
+* **logic**: logic related utility functions e.g. higher order logical functions
 
 ```clj
 [flathead "0.0.6"]
