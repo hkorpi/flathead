@@ -14,7 +14,7 @@ This library is divided to four parts:
 * **logic**: logic related utility functions e.g. higher order logical functions
 
 ```clj
-[flathead "0.0.6"]
+[flathead "0.0.7"]
 ```
 
 ## Usage
