@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - deep/map-values supports any seqable objects
 - deep/map-values values? predicate changed to branch? and there is more flexibility 
   to filter which seqable objects are supported
+- flatten/tree->flat / flatten/flat->tree support seqable objects and other key types (e.g. int, string) than keywords
+- deep/tree->flat / deep/flat->tree provide a flat conversion where flat keys are path vectors
 ### Fixed
 - deep/values
 
