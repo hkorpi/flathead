@@ -32,13 +32,18 @@
 
 (defn tree->flat
   "Transforms a nested associative structure to a flat one.
+  The flat key is created by concatenating the child key to the object root key using the given separator.
   This is an inverse of the flat->tree function. This is based on deep/tree->flat (see deep/tree->flat).
   Supports any seqable objects (see seqable?). Other sequences are transformed to maps using plain/sequence->map.
 
-  A branch? predicate can be used to mark objects as part of tree structure and not a value see deep/tree->flat.
+  Arguments:
+  - separator - A separator string used to form the flat map keys.
+  - tree      - A tree object is converted to a flat representation
+  - root-key  - Root key defines the root key for the tree object - use nil for empty
+  - branch?   - A branch? predicate can be used to mark objects as part of tree structure and not a value see deep/tree->flat.
   The default implementation will branch only inside maps."
 
-  ([separator object] (tree->flat nil separator object))
+  ([separator tree] (tree->flat nil separator tree))
   ([root-key separator tree]
    (tree->flat root-key map? separator tree))
   ([root-key branch? separator tree]

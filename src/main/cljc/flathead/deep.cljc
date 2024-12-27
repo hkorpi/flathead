@@ -46,9 +46,10 @@
 (defn tree->flat
   "Transforms a nested associative structure (map) to a flat one.
   Supports any seqable objects (see seqable?). Other sequences are transformed to maps using plain/sequence->map.
-  This is an inverse of the plain/flat->tree function.
+  This is an inverse of the plain/flat->tree function. The information of the original tree structure is preserved
+  in the flat map keys. The nested structure is not allowed to contain cycles; it must be a finite tree.
 
-  The nested structure is not allowed to contain cycles it must be a tree.
+  Sequences are converted to maps in transformation: `(comp flat->tree tree->flat)`
 
   Arguments:
   - A conj-key function defines how child keys are conjoined to the root key.
@@ -56,7 +57,8 @@
   - A root-key represent a key for the tree object.
 
   The default version use paths as keys in flat map and treat all sequential objects and maps as branches.
-  The values are same values as in values function i.e. (= (-> tree tree->flat vals set) (-> tree values set)).
+  The flat map values are same values as in values function i.e.
+  `(= (-> tree tree->flat vals set) (-> tree values set))`.
   The flatten namespace contains another variation which is using concatenated keys with separator."
 
   ([tree] (tree->flat conj (some-fn sequential? map?) [] tree))
